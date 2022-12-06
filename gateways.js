@@ -1,0 +1,15 @@
+export const gatewayName = {
+    '54d0b4fffe083f60':'FourFaith',
+    '7076fffffe0358c2':'Bodegas ACIC',
+    '7076fffffe01871a':'Calle Larga',
+    '7076fffffe032361':'Catalan',
+    '7076fffffe030035':'Las Brisas',
+    '7076fffffe030037':'Las Lomitas',
+    '7076fffffe031705':'Las Vegas',
+    '7076fffffe032349':'Parque Sabaneta',
+    '7076fffffe030149':'San José',
+    '7076fffffe032355':'zona norte',
+    '000800fffe4a2055':'OW_Test',
+    'ac1f09fffe01612c':'OW_TEST',
+    'ac1f09fffe052510':'Test Telemetrik | RAK7268',
+}

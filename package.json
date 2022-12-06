@@ -1,0 +1,24 @@
+{
+  "name": "ow_api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main",
+    "test": "node test",
+    "on": "node cmd/on.js",
+    "off": "node cmd/off.js",
+    "auto": "node cmd/auto.js",
+    "reset": "node cmd/reset.js",
+    "dim0": "node cmd/dim0.js",
+    "dim50": "node cmd/dim50.js",
+    "dim100": "node cmd/dim100.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^3.3.0"
+  },
+  "type": "module"
+}
