@@ -57,9 +57,8 @@ export async function getActiveDevices(limit){
             if(Math.ceil(packets/todayUplinks*100)>150)     description = "OVERFLOW"
             
             if(Math.ceil(std_deviation) > 15 && status == "OK"){
-                status = "WARNING"
                 description = "INTERMITENCE"
-
+                if(Math.ceil(std_deviation) > 15)   status = "WARNING"
                 if(Math.ceil(std_deviation) > 20)   status = "DANGER"
                 if(Math.ceil(std_deviation) > 30)   status = "ERROR"
             }
