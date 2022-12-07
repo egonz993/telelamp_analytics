@@ -38,6 +38,11 @@ export async function getActiveDevices(limit){
             let uplinks = await getPayloads(device.deveui)
             let packets = uplinks.length
             let FER = Math.ceil(packets/todayUplinks*100) + "%"
+
+            let timestamps = uplinks.map( packet => Math.trunc(new Date(packet.timestamp).getTime()/1000)).sort()
+            let interval = timestamps.map( (timestamp, idx, arr) => (arr[idx+1]-timestamp)/60).filter(x => x)
+            let average_time = Math.trunc(interval.reduce((a, b) => a+b, 0) / (interval.length - 1))
+            let std_deviation = Math.trunc(Math.sqrt(interval.reduce((a, b) => a + Math.pow((b-average_time),2), 0) / (interval.length - 1)))
             
             let status = "OK"
             if(Math.ceil(packets/todayUplinks*100)>150)     status = "WARNING"
@@ -46,16 +51,18 @@ export async function getActiveDevices(limit){
             if(Math.ceil(packets/todayUplinks*100)<50)      status = "WARNING"
             if(Math.ceil(packets/todayUplinks*100)<25)      status = "DANGER"
             if(Math.ceil(packets/todayUplinks*100)<10)      status = "ERROR"
-
+            
             let description = "OK"
             if(Math.ceil(packets/todayUplinks*100)<50)      description = "UNDERFLOW"
             if(Math.ceil(packets/todayUplinks*100)>150)     description = "OVERFLOW"
-
-            let timestamps = uplinks.map( packet => Math.trunc(new Date(packet.timestamp).getTime()/1000)).sort()
-            let interval = timestamps.map( (timestamp, idx, arr) => (arr[idx+1]-timestamp)/60).filter(x => x)
-            let average_time = Math.trunc(interval.reduce((a, b) => a+b, 0) / (interval.length - 1))
             
-            let std_deviation = Math.trunc(Math.sqrt(interval.reduce((a, b) => a + Math.pow((b-average_time),2), 0) / (interval.length - 1)))
+            if(Math.ceil(std_deviation) > 15 && status == "OK"){
+                status = "WARNING"
+                description = "INTERMITENCE"
+
+                if(Math.ceil(std_deviation) > 20)   status = "DANGER"
+                if(Math.ceil(std_deviation) > 30)   status = "ERROR"
+            }
             
             let result = {
                 deveui,
