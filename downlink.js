@@ -5,11 +5,11 @@ import { deveuiList } from './devices.js'
 
 
 export async function sendDownlinkGroup(payload){
-    console.log("fetching data...\n\n")
+    console.log(`\n\nfetching data... ${payload}\n`)
 
     for(let i=0; i<deveuiList.length; i++){
-       await downlink(deveuiList[i], payload).then(result => console.log(result))
-       await downlink(deveuiList[i], payload).then(result => console.log(result))
+       await downlink(deveuiList[i], payload).then(result => console.table(JSON.stringify(result)))
+       await downlink(deveuiList[i], payload).then(result => console.table(JSON.stringify(result)))
     }
 }
 
