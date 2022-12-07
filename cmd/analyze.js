@@ -1,15 +1,10 @@
 import fetch from 'node-fetch';
 import auth from '../auth.js';
+
 var devicesList = []
+let activeDevices = []
 
-let activeDevices = await getActiveDevices()
-
-
-loadingTable(20, (devices) => {         //param $time is the waiting time to get payloads qty
-    console.table(devices)
-});   
-
-async function getActiveDevices(){
+export async function getActiveDevices(limit){
     console.log("fetching data... ")
 
     const now = new Date()
@@ -22,8 +17,7 @@ async function getActiveDevices(){
     const todaySeconds = Math.ceil(time/1000)
     const todayUplinks = Math.ceil(todaySeconds/600)
     
-
-    let url = `https://nst.au.saas.orbiwise.com:8443/rest/nodes?from_date=${year}-${month}-${day}T00:00:00&limit=2000`
+    let url = `https://nst.au.saas.orbiwise.com:8443/rest/nodes?from_date=${year}-${month}-${day}T00:00:00&limit=${limit}`
     let params = {
         method: 'GET',
         headers: {
@@ -54,8 +48,8 @@ async function getActiveDevices(){
             if(Math.ceil(packets/todayUplinks*100)<10)      status = "ERROR"
 
             let description = "OK"
-            if(Math.ceil(packets/todayUplinks*100)<75)      description = "UNDERFLOW"
-            if(Math.ceil(packets/todayUplinks*100)>120)     description = "OVERFLOW"
+            if(Math.ceil(packets/todayUplinks*100)<50)      description = "UNDERFLOW"
+            if(Math.ceil(packets/todayUplinks*100)>150)     description = "OVERFLOW"
 
             let timestamps = uplinks.map( packet => Math.trunc(new Date(packet.timestamp).getTime()/1000)).sort()
             let interval = timestamps.map( (timestamp, idx, arr) => (arr[idx+1]-timestamp)/60).filter(x => x)
@@ -109,7 +103,8 @@ async function getPayloads(deveui){
     }
 }
 
-function loadingTable(t, callcack){
+export async function getAnalysis(t, limit = 2000, callcack){
+    activeDevices = await getActiveDevices(limit)
     let cont = 0;
     let interval = {}
     let time = activeDevices.length*t > 1000 ? activeDevices.length*t : 1000
@@ -125,14 +120,10 @@ function loadingTable(t, callcack){
             clearInterval(interval)
             
             if(devicesList.length < activeDevices.length)
-                console.error("\n\nERROR", "You need to incremment the waiting time for function loadingTable(t, callcack)\n\n")
+                console.error("\n\nERROR", "You need to incremment the waiting time (t) for function getAnalysis(t, limit, callcack)\n\n")
             else{
                 callcack(devicesList)
-                console.log("Devices rendered " + devicesList.length)
-                console.log("Total Devices: ", activeDevices.length)
             }
         }
     }, 1000)
 }
-
-
