@@ -1,10 +1,13 @@
 import fetch from 'node-fetch';
 import auth from '../auth.js';
-
 var devicesList = []
-let activeDevices = await getActiveDevices()
-loadingTable(10);
 
+let activeDevices = await getActiveDevices()
+
+
+loadingTable(20, (devices) => {         //param $time is the waiting time to get payloads qty
+    console.table(devices)
+});   
 
 async function getActiveDevices(){
     console.log("fetching data... ")
@@ -33,34 +36,39 @@ async function getActiveDevices(){
         let result = await fetch(url, params)
         let data = await result.json()
         let devices = await data.map( async (device) => {
-
+            
+            
             let deveui = device.deveui ? device.deveui : null
             let comment = device.comment ? device.comment : null
-            let last_reception = device.last_reception ? device.last_reception : null
-            let uplinks = await getPayloads(deveui)
-            let FER = Math.ceil(uplinks/todayUplinks*100) + "%"
+            
+            let uplinks = await getPayloads(device.deveui)
+            let packets = uplinks.length
+            let FER = Math.ceil(packets/todayUplinks*100) + "%"
             
             let status = "OK"
-            if(Math.ceil(uplinks/todayUplinks*100)>200)     status = "ERROR"
-            if(Math.ceil(uplinks/todayUplinks*100)>150)     status = "DANGER"
-            if(Math.ceil(uplinks/todayUplinks*100)>150)     status = "WARNING"
-            if(Math.ceil(uplinks/todayUplinks*100)<75)      status = "WARNING"
-            if(Math.ceil(uplinks/todayUplinks*100)<50)      status = "DANGER"
-            if(Math.ceil(uplinks/todayUplinks*100)<25)      status = "ERROR"
+            if(Math.ceil(packets/todayUplinks*100)>150)     status = "WARNING"
+            if(Math.ceil(packets/todayUplinks*100)>200)     status = "DANGER"
+            if(Math.ceil(packets/todayUplinks*100)>300)     status = "ERROR"
+            if(Math.ceil(packets/todayUplinks*100)<50)      status = "WARNING"
+            if(Math.ceil(packets/todayUplinks*100)<25)      status = "DANGER"
+            if(Math.ceil(packets/todayUplinks*100)<10)      status = "ERROR"
 
             let description = "OK"
-            if(Math.ceil(uplinks/todayUplinks*100)>200)     description = "OVERFLOW"
-            if(Math.ceil(uplinks/todayUplinks*100)>150)     description = "OVERFLOW"
-            if(Math.ceil(uplinks/todayUplinks*100)>150)     description = "OVERFLOW"
-            if(Math.ceil(uplinks/todayUplinks*100)<75)      description = "LOW SIGNAL"
-            if(Math.ceil(uplinks/todayUplinks*100)<50)      description = "LOW SIGNAL"
-            if(Math.ceil(uplinks/todayUplinks*100)<25)      description = "LOW SIGNAL"
+            if(Math.ceil(packets/todayUplinks*100)<75)      description = "UNDERFLOW"
+            if(Math.ceil(packets/todayUplinks*100)>120)     description = "OVERFLOW"
 
+            let timestamps = uplinks.map( packet => Math.trunc(new Date(packet.timestamp).getTime()/1000)).sort()
+            let interval = timestamps.map( (timestamp, idx, arr) => (arr[idx+1]-timestamp)/60).filter(x => x)
+            let average_time = Math.trunc(interval.reduce((a, b) => a+b, 0) / (interval.length - 1))
+            
+            let std_deviation = Math.trunc(Math.sqrt(interval.reduce((a, b) => a + Math.pow((b-average_time),2), 0) / (interval.length - 1)))
+            
             let result = {
                 deveui,
                 comment,
-                // last_reception,
-                uplinks,
+                packets,
+                average_time,
+                std_deviation,
                 "%err": FER,
                 status,
                 description,
@@ -95,16 +103,16 @@ async function getPayloads(deveui){
     try {
         let result = await fetch(url, params)
         let data = await result.json()
-        return data.length
+        return data
     } catch (error) {
         return error     
     }
 }
 
-function loadingTable(mills){
+function loadingTable(t, callcack){
     let cont = 0;
     let interval = {}
-    let time = activeDevices.length*mills > 1000 ? activeDevices.length*mills : 1000
+    let time = activeDevices.length*t > 1000 ? activeDevices.length*t : 1000
     
     console.log("Rendering table for " + activeDevices.length + " devices\n")
     
@@ -115,9 +123,14 @@ function loadingTable(mills){
 
         if(cont >= time) {
             clearInterval(interval)
-            console.table(devicesList)
-            console.log("Devices rendered " + devicesList.length)
-            console.log("Total Devices: ", activeDevices.length)
+            
+            if(devicesList.length < activeDevices.length)
+                console.error("\n\nERROR", "You need to incremment the waiting time for function loadingTable(t, callcack)\n\n")
+            else{
+                callcack(devicesList)
+                console.log("Devices rendered " + devicesList.length)
+                console.log("Total Devices: ", activeDevices.length)
+            }
         }
     }, 1000)
 }
