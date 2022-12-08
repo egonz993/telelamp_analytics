@@ -35,14 +35,28 @@ export async function getActiveDevices(limit){
             let deveui = device.deveui ? device.deveui : null
             let comment = device.comment ? device.comment : null
             
-            let uplinks = await getPayloads(device.deveui)
+            let uplinks =  await getPayloads(device.deveui)
             let packets = uplinks.length
             let FER = Math.ceil(packets/todayUplinks*100) + "%"
 
-            let timestamps = uplinks.map( packet => Math.trunc(new Date(packet.timestamp).getTime()/1000)).sort()
-            let interval = timestamps.map( (timestamp, idx, arr) => (arr[idx+1]-timestamp)/60).filter(x => x)
-            let average_time = Math.trunc(interval.reduce((a, b) => a+b, 0) / (interval.length - 1))
-            let std_deviation = Math.trunc(Math.sqrt(interval.reduce((a, b) => a + Math.pow((b-average_time),2), 0) / (interval.length - 1)))
+            let timestamps = 0
+            let interval = 0
+            let avg_interval = 0
+            let std_deviation = 0
+            let rssi = 0
+            let snr = 0 
+            let sf_used = 0 
+            let time_on_air_ms = 0  
+            if(uplinks.length >= 1){
+                timestamps =  uplinks.map( packet => Math.trunc(new Date(packet.timestamp).getTime()/1000)).sort()
+                interval = timestamps.map( (timestamp, idx, arr) => (arr[idx+1]-timestamp)/60).filter(x => x)
+                avg_interval = Math.trunc(interval.reduce((a, b) => a+b, 0) / (interval.length - 1))
+                std_deviation = Math.trunc(Math.sqrt(interval.reduce((a, b) => a + Math.pow((b-avg_interval),2), 0) / (interval.length - 1)))
+                rssi = Math.trunc((uplinks.map(packet => packet.rssi).reduce( (a, b) => a+b, 0)) / packets)
+                snr = Math.trunc((uplinks.map(packet => packet.snr).reduce( (a, b) => a+b, 0)) / packets)
+                sf_used = uplinks.map(packet => packet.sf_used).sort().filter( (x, idx, arr) => arr[idx+1] != x)
+                time_on_air_ms = Math.trunc((uplinks.map(packet => packet.time_on_air_ms).reduce( (a, b) => a+b, 0)) / packets)
+            }
             
             let status = "OK"
             if(Math.ceil(packets/todayUplinks*100)>150)     status = "WARNING"
@@ -67,9 +81,13 @@ export async function getActiveDevices(limit){
                 deveui,
                 comment,
                 packets,
-                average_time,
+                avg_interval,
                 std_deviation,
-                "%err": FER,
+                rssi,
+                snr,
+                sf_used,
+                time_on_air_ms,
+                FER,
                 status,
                 description,
             }
