@@ -34,7 +34,7 @@ function ago(days){
 }
 
 async function getActiveDevices() {
-    console.log("fetching data... ")
+    console.log("\nfetching data... ")
 
     let url = `https://nst.au.saas.orbiwise.com:8443/rest/nodes?from_date=${from_date}`
     let params = {

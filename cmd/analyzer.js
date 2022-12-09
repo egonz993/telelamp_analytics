@@ -1,12 +1,9 @@
 import { analyzer } from '../analysis.js'
 
-
-
 console.log("*************************************************")
-console.log("                   STRAIVOT")
-console.log("   Strong AI | Artificial Intelligence for IoT")
-console.log("*************************************************\n")
-
+console.log("                   STRAIVOT                      ")
+console.log("   Strong AI | Artificial Intelligence for IoT   ")
+console.log("*************************************************")
 
 /**analyzer(days)
  * 
