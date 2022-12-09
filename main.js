@@ -1,3 +1,3 @@
 import { analyzer } from './cmd/analyzer.js'
 
-analyzer()
+analyzer(7)

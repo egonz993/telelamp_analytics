@@ -8,19 +8,30 @@ const prompt = readline.createInterface({
 });
 
 let devicesList = []
+let from_date = ''
+let expected_ul = 0
 
-const now = new Date()
-let year = now.getFullYear()
-let month = now.getMonth() < 10 ? "0" + now.getMonth() + 1 : String(now.getMonth() + 1)
-let day = now.getDate() < 10 ? "0" + now.getDate() : String(now.getDate())
+function ago(days = 1){
+    //Interval Time in seconds
+    const ref_interval = 600 
+    
+    const now = new Date()
+    let ref_time = new Date(now.getTime() - days*24*60*60*1000)
+    
+    let year = ref_time.getFullYear()
+    let month = ref_time.getMonth() < 10 ? "0" + ref_time.getMonth() + 1 : String(ref_time.getMonth() + 1)
+    let day = ref_time.getDate() < 10 ? "0" + ref_time.getDate() : String(ref_time.getDate())
+    let hours = ref_time.getHours() < 10 ? "0" + ref_time.getHours() : String(ref_time.getHours())
+    let minutes = ref_time.getMinutes() < 10 ? "0" + ref_time.getMinutes() : String(ref_time.getMinutes())
+    let seconds = ref_time.getSeconds() < 10 ? "0" + ref_time.getSeconds() : String(ref_time.getSeconds())
+    
+    let expected_ul = Math.ceil((now.getTime() - ref_time.getTime())/(ref_interval*1000))
 
-let from_date = `${year}-${month}-${day}T00:00:00`
-
-const today = new Date(year + "-" + month + "-" + day)
-const time = now.getTime() - today.getTime()
-const todaySeconds = Math.ceil(time / 1000)
-const expected_ul = Math.ceil(todaySeconds / 600)
-
+    return {
+        from_date: `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`, 
+        expected_ul: expected_ul
+    }
+}
 
 async function getActiveDevices() {
     console.log("fetching data... ")
@@ -76,8 +87,11 @@ async function getPayloads(deveui) {
 
 async function DataAnalyzer(callback) {
     let activeDevices = await getActiveDevices()
+
     console.log(`\nProcessing data for ${activeDevices.length} devices`)
+    console.log(`Expected ${expected_ul} uplinks per devices from ${from_date}`)
     console.log(`This may take a few time, please wait\n`)
+    
     
     activeDevices.map(async (device) => {
         let deveui = device.deveui ? device.deveui : null
@@ -159,10 +173,14 @@ async function DataAnalyzer(callback) {
 
         return result
     })
-
 }
 
-export const analyzer = async () => {
+export const analyzer = async (days = 1) => {
+    let time_ago = ago(days)
+
+    from_date = time_ago.from_date
+    expected_ul = time_ago.expected_ul
+
     DataAnalyzer(devices => {
         // console.table(devices)
     
@@ -489,10 +507,5 @@ export const analyzer = async () => {
             }
             process.exit(0)
         });
-
-        
-
     })
 }
-
-analyzer()
