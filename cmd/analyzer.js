@@ -1,5 +1,4 @@
-import { analyzer, JSON_analizer } from '../analysis.js'
-//import json_file from '../logs/analytics 20221209_121305'
+import { analyzer, analyzer_file } from '../analysis.js'
 
 console.log("*************************************************")
 console.log("                   STRAIVOT                      ")
@@ -15,4 +14,16 @@ console.log("*************************************************")
  */
 analyzer(1)
 
-//JSON_analizer(json_file)
+
+
+
+
+
+/**analyzer_file(fileName)
+ * 
+ * Run the Data Analyzer Function to process all uplinks
+ * stored into the json file @fileName
+ * 
+ * @fileName    name of file to process
+ */
+//analyzer_file('analytics 20221209_122531.json')

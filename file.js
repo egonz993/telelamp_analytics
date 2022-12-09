@@ -1,6 +1,6 @@
 // writefile.js
 
-import { writeFile } from 'fs';
+import { writeFile, readFile } from 'fs';
 
 const now = new Date()
 let year =  now.getFullYear()
@@ -16,5 +16,12 @@ export function writeToFile(content){
     writeFile(`logs/analytics ${timestamp}.json`, content, (err) => {
         if (err) throw err;
         //console.log(`\n\nASYNC: Data stored succesfully: ./logs/analytics ${timestamp}.json`);
+    });
+}
+
+export function readFromFile(fileName, callback) {
+    readFile(fileName, 'utf8', (err, content) => {
+        if (err) throw err;
+        callback(JSON.parse(content))
     });
 }

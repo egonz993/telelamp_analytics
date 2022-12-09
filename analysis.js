@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import auth from './auth.js';
 import readline from 'readline'
-import { writeToFile } from './writeFile.js'
+import { writeToFile, readFromFile } from './file.js'
 
 const prompt = readline.createInterface({
     input: process.stdin,
@@ -179,16 +179,7 @@ async function DataAnalyzer(callback) {
     })
 }
 
-export const analyzer = async (days = 1) => {
-    let time_ago = ago(days)
-
-    from_date = time_ago.from_date
-    expected_ul = time_ago.expected_ul
-
-    DataAnalyzer(JSON_analizer)
-}
-
-export const JSON_analizer = (devices) => {
+function JSON_analizer(devices){
     // console.table(devices)
 
     let rak3172_devices = devices.filter(device => device.deveui.includes("ac1f09fffe"))
@@ -515,3 +506,18 @@ export const JSON_analizer = (devices) => {
         process.exit(0)
     });
 }
+
+export const analyzer = async (days = 1) => {
+    let time_ago = ago(days)
+
+    from_date = time_ago.from_date
+    expected_ul = time_ago.expected_ul
+
+    DataAnalyzer(JSON_analizer)
+}
+
+export const analyzer_file = (fileName) => {
+    readFromFile(`./logs/${fileName}`, async (content) => {
+        JSON_analizer(content)
+    })
+} 
