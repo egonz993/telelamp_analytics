@@ -77,7 +77,7 @@ async function getPayloads(deveui) {
 async function DataAnalyzer(callback) {
     let activeDevices = await getActiveDevices()
     console.log(`\nProcessing data for ${activeDevices.length} devices`)
-    console.log(`This may take a few minutes, please wait\n`)
+    console.log(`This may take a few time, please wait\n`)
     
     activeDevices.map(async (device) => {
         let deveui = device.deveui ? device.deveui : null
@@ -294,34 +294,34 @@ export const analyzer = async () => {
             'all_devices': {
                 total: devices.length,
                 working_ok: Math.round(100*working.length/devices.length) + "%",
-                undefined: Math.round(100*undefined.length/devices.length) + "%",
                 underflows: Math.round(100*underflows.length/devices.length) + "%",
                 overflows: Math.round(100*overflows.length/devices.length) + "%",
-                intermitence: Math.round(100*intermitence.length/devices.length) + "%"
+                intermitence: Math.round(100*intermitence.length/devices.length) + "%",
+                undefined: Math.round(100*undefined.length/devices.length) + "%"
             },
             'rak3172': {
                 total: Math.round(100*rak3172_devices.length/devices.length) + "%",
                 working_ok: Math.round(100*rak3172_working.length/devices.length) + "%",
-                undefined: Math.round(100*rak3172_undefined.length/devices.length) + "%",
                 underflows: Math.round(100*rak3172_underflows.length/devices.length) + "%",
                 overflows: Math.round(100*rak3172_overflows.length/devices.length) + "%",
-                intermitence: Math.round(100*rak3172_intermitence.length/devices.length) + "%"
+                intermitence: Math.round(100*rak3172_intermitence.length/devices.length) + "%",
+                undefined: Math.round(100*rak3172_undefined.length/devices.length) + "%"
             },
             'rak4260': {
                 total: Math.round(100*rak4260_devices.length/devices.length) + "%",
                 working_ok: Math.round(100*rak4260_working.length/devices.length) + "%",
-                undefined: Math.round(100*rak4260_undefined.length/devices.length) + "%",
                 underflows: Math.round(100*rak4260_underflows.length/devices.length) + "%",
                 overflows: Math.round(100*rak4260_overflows.length/devices.length) + "%",
-                intermitence: Math.round(100*rak4260_intermitence.length/devices.length) + "%"
+                intermitence: Math.round(100*rak4260_intermitence.length/devices.length) + "%",
+                undefined: Math.round(100*rak4260_undefined.length/devices.length) + "%"
             },
             'elemon': {
                 total: Math.round(100*elemon_devices.length/devices.length) + "%",
                 working_ok: Math.round(100*elemon_working.length/devices.length) + "%",
-                undefined: Math.round(100*elemon_undefined.length/devices.length) + "%",
                 underflows: Math.round(100*elemon_underflows.length/devices.length) + "%",
                 overflows: Math.round(100*elemon_overflows.length/devices.length) + "%",
-                intermitence: Math.round(100*elemon_intermitence.length/devices.length) + "%"
+                intermitence: Math.round(100*elemon_intermitence.length/devices.length) + "%",
+                undefined: Math.round(100*elemon_undefined.length/devices.length) + "%"
             }
         }
 
@@ -329,34 +329,34 @@ export const analyzer = async () => {
             'all_devices': {
                 total: '-',
                 working_ok: Math.round(100*working.length/devices.length) + "%",
-                undefined: Math.round(100*undefined.length/devices.length) + "%",
                 underflows: Math.round(100*underflows.length/devices.length) + "%",
                 overflows: Math.round(100*overflows.length/devices.length) + "%",
-                intermitence: Math.round(100*intermitence.length/devices.length) + "%"
+                intermitence: Math.round(100*intermitence.length/devices.length) + "%",
+                undefined: Math.round(100*undefined.length/devices.length) + "%"
             },
             'rak3172': {
                 total: rak3172_devices.length,
                 working_ok: Math.round(100*rak3172_working.length/rak3172_devices.length) + "%",
-                undefined: Math.round(100*rak3172_undefined.length/rak3172_devices.length) + "%",
                 underflows: Math.round(100*rak3172_underflows.length/rak3172_devices.length) + "%",
                 overflows: Math.round(100*rak3172_overflows.length/rak3172_devices.length) + "%",
-                intermitence: Math.round(100*rak3172_intermitence.length/rak3172_devices.length) + "%"
+                intermitence: Math.round(100*rak3172_intermitence.length/rak3172_devices.length) + "%",
+                undefined: Math.round(100*rak3172_undefined.length/rak3172_devices.length) + "%"
             },
             'rak4260': {
                 total: rak4260_devices.length,
                 working_ok: Math.round(100*rak4260_working.length/rak4260_devices.length) + "%",
-                undefined: Math.round(100*rak4260_undefined.length/rak4260_devices.length) + "%",
                 underflows: Math.round(100*rak4260_underflows.length/rak4260_devices.length) + "%",
                 overflows: Math.round(100*rak4260_overflows.length/rak4260_devices.length) + "%",
-                intermitence: Math.round(100*rak4260_intermitence.length/rak4260_devices.length) + "%"
+                intermitence: Math.round(100*rak4260_intermitence.length/rak4260_devices.length) + "%",
+                undefined: Math.round(100*rak4260_undefined.length/rak4260_devices.length) + "%"
             },
             'elemon': {
                 total: elemon_devices.length,
                 working_ok: Math.round(100*elemon_working.length/elemon_devices.length) + "%",
-                undefined: Math.round(100*elemon_undefined.length/elemon_devices.length) + "%",
                 underflows: Math.round(100*elemon_underflows.length/elemon_devices.length) + "%",
                 overflows: Math.round(100*elemon_overflows.length/elemon_devices.length) + "%",
-                intermitence: Math.round(100*elemon_intermitence.length/elemon_devices.length) + "%"
+                intermitence: Math.round(100*elemon_intermitence.length/elemon_devices.length) + "%",
+                undefined: Math.round(100*elemon_undefined.length/elemon_devices.length) + "%"
             }
         }
 
