@@ -1,4 +1,5 @@
-import { analyzer } from '../analysis.js'
+import { analyzer, JSON_analizer } from '../analysis.js'
+//import json_file from '../logs/analytics 20221209_121305'
 
 console.log("*************************************************")
 console.log("                   STRAIVOT                      ")
@@ -13,3 +14,5 @@ console.log("*************************************************")
  * @days    number of days to analyze
  */
 analyzer(1)
+
+//JSON_analizer(json_file)
