@@ -11,7 +11,7 @@ let devicesList = []
 let from_date = ''
 let expected_ul = 0
 
-function ago(days = 1){
+function ago(days){
     //Interval Time in seconds
     const ref_interval = 600 
     
