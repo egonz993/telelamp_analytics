@@ -7,6 +7,7 @@
     "start": "node main",
     "test": "node test",
     "analyzer": "node cmd/analyzer.js",
+    "file_analyzer": "node cmd/file_analyzer.js",
     "send": "node cmd/send.js"
   },
   "keywords": [],

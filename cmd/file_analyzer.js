@@ -1,15 +1,15 @@
-import { analyzer } from '../analysis.js'
+import { analyzer_file } from '../analysis.js'
 
 console.log("*************************************************")
 console.log("                   STRAIVOT                      ")
 console.log("   Strong AI | Artificial Intelligence for IoT   ")
 console.log("*************************************************")
 
-/**analyzer(days)
+/**analyzer_file(fileName)
  * 
  * Run the Data Analyzer Function to process all uplinks
- * received from LoRaWAN devices since @days ago
+ * stored into the json file @fileName
  * 
- * @days    number of days to analyze
+ * @fileName    name of file to process
  */
-analyzer(1)
+analyzer_file('analytics 20221209_133045.json')
