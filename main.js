@@ -69,22 +69,22 @@ DataAnalyzer(devices => {
     /* CONSOLE LOGS */
     console.log("\n\n")
 
-    console.log("\nALL DEVICES WORKING OK:", working.length)
+    console.log("\nTOTAL DEVICES WORKING OK:", working.length)
     console.table(working)
 
     //All devices underflow
-    console.log("\nALL DEVICES UNDERFLOW:", underflows.length)
+    console.log("\nTOTAL DEVICES UNDERFLOW:", underflows.length)
     console.table(underflows)
     
     //All devices overerflow
-    console.log("\nALL DEVICES OVERFLOW:", overflows.length)
+    console.log("\nTOTAL DEVICES OVERFLOW:", overflows.length)
     console.table(overflows)
     
     //All devices intermitence
-    console.log("\nALL DEVICES INTERMITENCE:", intermitence.length)
+    console.log("\nTOTAL DEVICES INTERMITENCE:", intermitence.length)
     console.table(intermitence)
 
-    console.log("\nALL DEVICES UNDEFINED", undefined.length)
+    console.log("\nTOTAL DEVICES UNDEFINED", undefined.length)
     console.table(undefined)
 
 
@@ -150,7 +150,3 @@ DataAnalyzer(devices => {
     console.log("\n- INTERMITENCE:", other_intermitence.length, "\n--> Warning: ", other_intermitence_warning.length, "\n--> Danger: ", other_intermitence_danger.length, "\n--> Error: ", other_intermitence_error.length)
 
 })
-
-
-
-//edited -->    node_modules\node-fetch\src\body.js
