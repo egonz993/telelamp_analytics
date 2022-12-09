@@ -1,5 +1,13 @@
 import { analyzer } from '../analysis.js'
 
+
+
+console.log("*************************************************")
+console.log("                   STRAIVOT")
+console.log("   Strong AI | Artificial Intelligence for IoT")
+console.log("*************************************************\n")
+
+
 /**analyzer(days)
  * 
  * Run the Data Analyzer Function to process all uplinks
