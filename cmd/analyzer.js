@@ -135,9 +135,9 @@ async function DataAnalyzer(callback) {
             if (Math.ceil(packets / expected_ul * 100) < 50) description = "UNDERFLOW"
             if (Math.ceil(packets / expected_ul * 100) > 150) description = "OVERFLOW"
 
-            if (status == "OK" && Math.ceil(deviation) > 10) {
+            if (status == "OK" && Math.ceil(deviation) > 9) {
                 description = "INTERMITENCE"
-                if (Math.ceil(deviation) > 10) status = "WARNING"
+                if (Math.ceil(deviation) > 9) status = "WARNING"
                 if (Math.ceil(deviation) > 25) status = "DANGER"
                 if (Math.ceil(deviation) > 50) status = "ERROR"
             }
