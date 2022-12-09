@@ -87,11 +87,11 @@ async function DataAnalyzer(callback) {
 
         let uplinks = await getPayloads(device.deveui)
 
-        let timestamps = 0
-        let interval = 0
         let packets = 0
-        let avg_interval = 0
-        let std_deviation = 0
+        let timestamps = 0
+        let intervals = 0
+        let interval = 0
+        let deviation = 0
         let rssi = 0
         let snr = 0
         let sf_used = 0
@@ -104,9 +104,9 @@ async function DataAnalyzer(callback) {
 
             packets = uplinks.length
             timestamps = uplinks.map(packet => Math.trunc(new Date(packet.timestamp).getTime() / 1000)).sort()
-            interval = timestamps.map((timestamp, idx, arr) => (arr[idx + 1] - timestamp) / 60).filter(x => x)
-            avg_interval = Math.trunc(interval.reduce((a, b) => a + b, 0) / (interval.length - 1))
-            std_deviation = Math.trunc(Math.sqrt(interval.reduce((a, b) => a + Math.pow((b - avg_interval), 2), 0) / (interval.length - 1)))
+            intervals = timestamps.map((timestamp, idx, arr) => (arr[idx + 1] - timestamp) / 60).filter(x => x)
+            interval = Math.trunc(intervals.reduce((a, b) => a + b, 0) / (intervals.length - 1))
+            deviation = Math.trunc(Math.sqrt(intervals.reduce((a, b) => a + Math.pow((b - interval), 2), 0) / (intervals.length - 1)))
             rssi = Math.trunc((uplinks.map(packet => packet.rssi).reduce((a, b) => a + b, 0)) / packets)
             snr = Math.trunc((uplinks.map(packet => packet.snr).reduce((a, b) => a + b, 0)) / packets)
             sf_used = uplinks.map(packet => packet.sf_used).sort().filter((x, idx, arr) => arr[idx + 1] != x)
@@ -125,11 +125,11 @@ async function DataAnalyzer(callback) {
             if (Math.ceil(packets / todayUplinks * 100) < 50) description = "UNDERFLOW"
             if (Math.ceil(packets / todayUplinks * 100) > 150) description = "OVERFLOW"
 
-            if (status == "OK" && Math.ceil(std_deviation) > 15) {
+            if (status == "OK" && Math.ceil(deviation) > 15) {
                 description = "INTERMITENCE"
-                if (Math.ceil(std_deviation) > 15) status = "WARNING"
-                if (Math.ceil(std_deviation) > 20) status = "DANGER"
-                if (Math.ceil(std_deviation) > 30) status = "ERROR"
+                if (Math.ceil(deviation) > 15) status = "WARNING"
+                if (Math.ceil(deviation) > 20) status = "DANGER"
+                if (Math.ceil(deviation) > 30) status = "ERROR"
             }
         }
 
@@ -137,8 +137,8 @@ async function DataAnalyzer(callback) {
             deveui,
             comment,
             packets,
-            avg_interval,
-            std_deviation,
+            interval,
+            deviation,
             rssi,
             snr,
             sf_used,
@@ -301,6 +301,41 @@ export const analyzer = async () => {
                 intermitence: Math.round(100*intermitence.length/devices.length) + "%"
             },
             'rak3172': {
+                total: Math.round(100*rak3172_devices.length/devices.length) + "%",
+                working_ok: Math.round(100*rak3172_working.length/devices.length) + "%",
+                undefined: Math.round(100*rak3172_undefined.length/devices.length) + "%",
+                underflows: Math.round(100*rak3172_underflows.length/devices.length) + "%",
+                overflows: Math.round(100*rak3172_overflows.length/devices.length) + "%",
+                intermitence: Math.round(100*rak3172_intermitence.length/devices.length) + "%"
+            },
+            'rak4260': {
+                total: Math.round(100*rak4260_devices.length/devices.length) + "%",
+                working_ok: Math.round(100*rak4260_working.length/devices.length) + "%",
+                undefined: Math.round(100*rak4260_undefined.length/devices.length) + "%",
+                underflows: Math.round(100*rak4260_underflows.length/devices.length) + "%",
+                overflows: Math.round(100*rak4260_overflows.length/devices.length) + "%",
+                intermitence: Math.round(100*rak4260_intermitence.length/devices.length) + "%"
+            },
+            'elemon': {
+                total: Math.round(100*elemon_devices.length/devices.length) + "%",
+                working_ok: Math.round(100*elemon_working.length/devices.length) + "%",
+                undefined: Math.round(100*elemon_undefined.length/devices.length) + "%",
+                underflows: Math.round(100*elemon_underflows.length/devices.length) + "%",
+                overflows: Math.round(100*elemon_overflows.length/devices.length) + "%",
+                intermitence: Math.round(100*elemon_intermitence.length/devices.length) + "%"
+            }
+        }
+
+        const analysis_percentage_partial = {
+            'all_devices': {
+                total: '-',
+                working_ok: Math.round(100*working.length/devices.length) + "%",
+                undefined: Math.round(100*undefined.length/devices.length) + "%",
+                underflows: Math.round(100*underflows.length/devices.length) + "%",
+                overflows: Math.round(100*overflows.length/devices.length) + "%",
+                intermitence: Math.round(100*intermitence.length/devices.length) + "%"
+            },
+            'rak3172': {
                 total: rak3172_devices.length,
                 working_ok: Math.round(100*rak3172_working.length/rak3172_devices.length) + "%",
                 undefined: Math.round(100*rak3172_undefined.length/rak3172_devices.length) + "%",
@@ -325,10 +360,17 @@ export const analyzer = async () => {
                 intermitence: Math.round(100*elemon_intermitence.length/elemon_devices.length) + "%"
             }
         }
-        
-        console.log('\n\nRESUME OF RESULTS\n')
+
+        console.log('\n\nRESUME OF RESULTS')
+
+        console.log('\n\nTotal of devices')
         console.table(analysis)
+
+        console.log('\n\nPercentage over the total devices')
         console.table(analysis_percentage)
+
+        console.log('\n\nPercentage over the group of devices')
+        console.table(analysis_percentage_partial)
 
         prompt.question('\n Would you like to print tables? (y) ', (x) => {
             if(x != 'n' && x != 'N'){
