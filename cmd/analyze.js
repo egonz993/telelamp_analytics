@@ -31,23 +31,27 @@ export async function getActiveDevices(limit){
         let data = await result.json()
         let devices = await data.map( async (device) => {
             
-            
             let deveui = device.deveui ? device.deveui : null
             let comment = device.comment ? device.comment : null
             
             let uplinks =  await getPayloads(device.deveui)
-            let packets = uplinks.length
-            let FER = Math.ceil(packets/todayUplinks*100) + "%"
 
             let timestamps = 0
             let interval = 0
+            let packets = 0
             let avg_interval = 0
             let std_deviation = 0
             let rssi = 0
             let snr = 0 
             let sf_used = 0 
-            let time_on_air_ms = 0  
+            let time_on_air_ms = 0 
+            let FER = 0
+            let status = "UNDEFINED"
+            let description = "UNDEFINED"
+
             if(uplinks.length >= 1){
+
+                packets = uplinks.length
                 timestamps =  uplinks.map( packet => Math.trunc(new Date(packet.timestamp).getTime()/1000)).sort()
                 interval = timestamps.map( (timestamp, idx, arr) => (arr[idx+1]-timestamp)/60).filter(x => x)
                 avg_interval = Math.trunc(interval.reduce((a, b) => a+b, 0) / (interval.length - 1))
@@ -56,25 +60,26 @@ export async function getActiveDevices(limit){
                 snr = Math.trunc((uplinks.map(packet => packet.snr).reduce( (a, b) => a+b, 0)) / packets)
                 sf_used = uplinks.map(packet => packet.sf_used).sort().filter( (x, idx, arr) => arr[idx+1] != x)
                 time_on_air_ms = Math.trunc((uplinks.map(packet => packet.time_on_air_ms).reduce( (a, b) => a+b, 0)) / packets)
-            }
-            
-            let status = "OK"
-            if(Math.ceil(packets/todayUplinks*100)>150)     status = "WARNING"
-            if(Math.ceil(packets/todayUplinks*100)>200)     status = "DANGER"
-            if(Math.ceil(packets/todayUplinks*100)>300)     status = "ERROR"
-            if(Math.ceil(packets/todayUplinks*100)<50)      status = "WARNING"
-            if(Math.ceil(packets/todayUplinks*100)<25)      status = "DANGER"
-            if(Math.ceil(packets/todayUplinks*100)<10)      status = "ERROR"
-            
-            let description = "OK"
-            if(Math.ceil(packets/todayUplinks*100)<50)      description = "UNDERFLOW"
-            if(Math.ceil(packets/todayUplinks*100)>150)     description = "OVERFLOW"
-            
-            if(Math.ceil(std_deviation) > 15 && status == "OK"){
-                description = "INTERMITENCE"
-                if(Math.ceil(std_deviation) > 15)   status = "WARNING"
-                if(Math.ceil(std_deviation) > 20)   status = "DANGER"
-                if(Math.ceil(std_deviation) > 30)   status = "ERROR"
+                FER = Math.ceil(packets/todayUplinks*100) + "%"
+
+                status = "OK"
+                if(Math.ceil(packets/todayUplinks*100)>150)     status = "WARNING"
+                if(Math.ceil(packets/todayUplinks*100)>200)     status = "DANGER"
+                if(Math.ceil(packets/todayUplinks*100)>300)     status = "ERROR"
+                if(Math.ceil(packets/todayUplinks*100)<50)      status = "WARNING"
+                if(Math.ceil(packets/todayUplinks*100)<25)      status = "DANGER"
+                if(Math.ceil(packets/todayUplinks*100)<10)      status = "ERROR"
+                
+                description = "OK"
+                if(Math.ceil(packets/todayUplinks*100)<50)      description = "UNDERFLOW"
+                if(Math.ceil(packets/todayUplinks*100)>150)     description = "OVERFLOW"
+                
+                if(status == "OK" && Math.ceil(std_deviation) > 15){
+                    description = "INTERMITENCE"
+                    if(Math.ceil(std_deviation) > 15)   status = "WARNING"
+                    if(Math.ceil(std_deviation) > 20)   status = "DANGER"
+                    if(Math.ceil(std_deviation) > 30)   status = "ERROR"
+                }
             }
             
             let result = {
@@ -127,10 +132,14 @@ async function getPayloads(deveui){
     }
 }
 
-export async function getAnalysis(t, limit = 2000, callcack){
-    activeDevices = await getActiveDevices(limit)
+export async function getAnalysis(callcack){
+    
+    const t = 200
+    const limit = 2000
+    
     let cont = 0;
     let interval = {}
+    activeDevices = await getActiveDevices(limit)
     let time = activeDevices.length*t > 1000 ? activeDevices.length*t : 1000
     
     console.log("Rendering table for " + activeDevices.length + " devices\n")
@@ -143,8 +152,10 @@ export async function getAnalysis(t, limit = 2000, callcack){
         if(cont >= time) {
             clearInterval(interval)
             
-            if(devicesList.length < activeDevices.length)
-                console.error("\n\nERROR", "You need to incremment the waiting time (t) for function getAnalysis(t, limit, callcack)\n\n")
+            if(devicesList.length < activeDevices.length){
+                callcack(devicesList)
+                console.error("\n\nERROR", "You need to incremment the waiting time (const t) for function getAnalysis(callcack)\n\n")
+            }
             else{
                 callcack(devicesList)
             }

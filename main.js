@@ -6,7 +6,7 @@ import { getAnalysis } from './cmd/analyze.js'
 
 
 
-getAnalysis(100, 2000, (devices) => {         //getAnalysis(t, limit, callcack)
+getAnalysis((devices) => {         //getAnalysis(t, limit, callcack)
     // console.table(devices)
 
     let rak3172_devices = devices.filter(device => device.deveui.includes("ac1f09fffe"))
@@ -29,11 +29,13 @@ getAnalysis(100, 2000, (devices) => {         //getAnalysis(t, limit, callcack)
     let intermitence_warning = intermitence.filter(device => device.status == 'WARNING')
     let intermitence_danger = intermitence.filter(device => device.status == 'DANGER')
     let intermitence_error = intermitence.filter(device => device.status == 'ERROR')
-
+    
+    let undefined = devices.filter(device => device.description == 'UNDEFINED')
 
 
     //RAK3172 DEVICES
     let rak3172_working = rak3172_devices.filter(device => device.description == 'OK')
+    let rak3172_undefined= rak3172_devices.filter(device => device.description == 'UNDEFINED')
 
     let rak3172_underflows = rak3172_devices.filter(device => device.description == 'UNDERFLOW')
     let rak3172_underflows_warning = rak3172_underflows.filter(device => device.status == 'WARNING')
@@ -52,6 +54,7 @@ getAnalysis(100, 2000, (devices) => {         //getAnalysis(t, limit, callcack)
 
     //OTHER DEVICES
     let other_working = other_devices.filter(device => device.description == 'OK')
+    let other_undefined = other_devices.filter(device => device.description == 'UNDEFINED')
 
     let other_underflows = other_devices.filter(device => device.description == 'UNDERFLOW')
     let other_underflows_warning = other_underflows.filter(device => device.status == 'WARNING')
@@ -72,7 +75,7 @@ getAnalysis(100, 2000, (devices) => {         //getAnalysis(t, limit, callcack)
 
     /* CONSOLE LOGS */
 
-    console.log("\nWORKING OK:", working.length)
+    console.log("\nALL DEVICES WORKING OK:", working.length)
     console.table(working)
 
     //All devices underflow
@@ -87,58 +90,72 @@ getAnalysis(100, 2000, (devices) => {         //getAnalysis(t, limit, callcack)
     console.log("\nALL DEVICES INTERMITENCE:", intermitence.length)
     console.table(intermitence)
 
+    console.log("\nALL DEVICES UNDEFINED", undefined.length)
+    console.table(undefined)
+
 
 
     //RAK3172 devices underflows
-    console.log("\n- RAK3172 DEVICES UNDERFLOW:", rak3172_underflows.length, "\n--> Warning: ", rak3172_underflows_warning.length, "| Danger: ", rak3172_underflows_danger.length, "| Error: ", rak3172_underflows_error.length)
+    console.log("\n\n- RAK3172 DEVICES UNDERFLOW:", rak3172_underflows.length, "\n--> Warning: ", rak3172_underflows_warning.length, "\n--> Danger: ", rak3172_underflows_danger.length, "\n--> Error: ", rak3172_underflows_error.length)
     console.table(rak3172_underflows)
 
     //RAK3172 devices overerflows
-    console.log("\n- RAK3172 DEVICES OVERFLOW:", rak3172_overflows.length, "\n--> Warning: ", rak3172_overflows_warning.length, "| Danger: ", rak3172_overflows_danger.length, "| Error: ", rak3172_overflows_error.length)
+    console.log("\n\n- RAK3172 DEVICES OVERFLOW:", rak3172_overflows.length, "\n--> Warning: ", rak3172_overflows_warning.length, "\n--> Danger: ", rak3172_overflows_danger.length, "\n--> Error: ", rak3172_overflows_error.length)
     console.table(rak3172_overflows)
     
-    //All devices intermitence
-    console.log("\n- RAK3172 DEVICES INTERMITENCE:", rak3172_intermitence.length)
+    //RAK3172 intermitence
+    console.log("\n\n- RAK3172 DEVICES INTERMITENCE:", rak3172_intermitence.length)
     console.table(rak3172_intermitence)
+    
+    //RAK3172 undefined
+    console.log("\n\n- RAK3172 DEVICES UNDEFINED:", rak3172_undefined.length)
+    console.table(rak3172_undefined)
 
 
 
     //OTHER devices underflows
-    console.log("\n- OTHER DEVICES UNDERFLOW:", other_underflows.length, "\n--> Warning: ", other_underflows_warning.length, "| Danger: ", other_underflows_danger.length, "| Error: ", other_underflows_error.length)
+    console.log("\n\n- OTHER DEVICES UNDERFLOW:", other_underflows.length, "\n--> Warning: ", other_underflows_warning.length, "\n--> Danger: ", other_underflows_danger.length, "\n--> Error: ", other_underflows_error.length)
     console.table(other_underflows)
     
     //OTHER devices overerflows
-    console.log("\n- OTHER DEVICES OVERFLOW:", other_overflows.length, "\n--> Warning: ", other_overflows_warning.length, "| Danger: ", other_overflows_danger.length, "| Error: ", other_overflows_error.length)
+    console.log("\n\n- OTHER DEVICES OVERFLOW:", other_overflows.length, "\n--> Warning: ", other_overflows_warning.length, "\n--> Danger: ", other_overflows_danger.length, "\n--> Error: ", other_overflows_error.length)
     console.table(other_overflows)
     
-    //All devices intermitence
-    console.log("\OTHER DEVICES INTERMITENCE:", other_intermitence.length)
+    //RAKOTHER3172 intermitence
+    console.log("\n- OTHER DEVICES INTERMITENCE:", other_intermitence.length)
     console.table(other_intermitence)
+    
+    //OTHER undefined
+    console.log("\n- OTHER DEVICES UNDEFINED:", other_undefined.length)
+    console.table(other_undefined)
 
 
 
     /* RESUME */
     
     //ALL DEVICES
-    console.log("\nALL DEVICES")
-    console.log("- WORKING OK:", working.length)
-    console.log("- UNDERFLOW:", underflows.length, "--> Warning: ", underflows_warning.length, "| Danger: ", underflows_danger.length, "| Error: ", underflows_error.length)
-    console.log("- OVERFLOW:", overflows.length, "--> Warning: ", overflows_warning.length, "| Danger: ", overflows.length, "| Error: ", overflows_error.length)
-    console.log("- INTERMITENCE:", intermitence.length, "--> Warning: ", intermitence_warning.length, "| Danger: ", intermitence_danger.length, "| Error: ", intermitence_error.length)
+    console.log("\n\n\nALL DEVICES: ", devices.length)
+    console.log("\n- WORKING OK:", working.length)
+    console.log("\n- UNDEFINED:", undefined.length)
+    console.log("\n- UNDERFLOW:", underflows.length, "\n--> Warning: ", underflows_warning.length, "\n--> Danger: ", underflows_danger.length, "\n--> Error: ", underflows_error.length)
+    console.log("\n- OVERFLOW:", overflows.length, "\n--> Warning: ", overflows_warning.length, "\n--> Danger: ", overflows_danger.length, "\n--> Error: ", overflows_error.length)
+    console.log("\n- INTERMITENCE:", intermitence.length, "\n--> Warning: ", intermitence_warning.length, "\n--> Danger: ", intermitence_danger.length, "\n--> Error: ", intermitence_error.length)
 
     //RAK3172 DEVICES
-    console.log("\nRAK3172 DEVICES")
-    console.log("- WORKING OK:", rak3172_working.length)
-    console.log("- UNDERFLOW:", rak3172_underflows.length, "--> Warning: ", rak3172_underflows_warning.length, "| Danger: ", rak3172_underflows_danger.length, "| Error: ", rak3172_underflows_error.length)
-    console.log("- OVERFLOW:", rak3172_overflows.length, "--> Warning: ", rak3172_overflows_warning.length, "| Danger: ", rak3172_overflows_danger.length, "| Error: ", rak3172_overflows_error.length)
-    console.log("- INTERMITENCE:", rak3172_intermitence.length, "--> Warning: ", rak3172_intermitence_warning.length, "| Danger: ", rak3172_intermitence_danger.length, "| Error: ", rak3172_intermitence_error.length)
+    console.log("\n\n\nRAK3172 DEVICES: ", rak3172_devices.length)
+    console.log("\n- WORKING OK:", rak3172_working.length)
+    console.log("\n- UNDEFINED:", rak3172_undefined.length)
+    console.log("\n- UNDERFLOW:", rak3172_underflows.length, "\n--> Warning: ", rak3172_underflows_warning.length, "\n--> Danger: ", rak3172_underflows_danger.length, "\n--> Error: ", rak3172_underflows_error.length)
+    console.log("\n- OVERFLOW:", rak3172_overflows.length, "\n--> Warning: ", rak3172_overflows_warning.length, "\n--> Danger: ", rak3172_overflows_danger.length, "\n--> Error: ", rak3172_overflows_error.length)
+    console.log("\n- INTERMITENCE:", rak3172_intermitence.length, "\n--> Warning: ", rak3172_intermitence_warning.length, "\n--> Danger: ", rak3172_intermitence_danger.length, "\n--> Error: ", rak3172_intermitence_error.length)
 
     //OTHER DEVICES
-    console.log("\nOTHER DEVICES")
-    console.log("- WORKING OK:", other_working.length)
-    console.log("- UNDERFLOW:", other_underflows.length, "--> Warning: ", other_underflows_warning.length, "| Danger: ", other_underflows_danger.length, "| Error: ", other_underflows_error.length)
-    console.log("- OVERFLOW:", other_overflows.length, "--> Warning: ", other_overflows_warning.length, "| Danger: ", other_overflows_danger.length, "| Error: ", other_overflows_error.length)
-    console.log("- INTERMITENCE:", other_intermitence.length, "--> Warning: ", other_intermitence_warning.length, "| Danger: ", other_intermitence_danger.length, "| Error: ", other_intermitence_error.length)
+    console.log("\n\n\nOTHER DEVICES: ", other_devices.length)
+    console.log("\n- WORKING OK:", other_working.length)
+    console.log("\n- UNDEFINED:", other_undefined.length)
+    console.log("\n- UNDERFLOW:", other_underflows.length, "\n--> Warning: ", other_underflows_warning.length, "\n--> Danger: ", other_underflows_danger.length, "\n--> Error: ", other_underflows_error.length)
+    console.log("\n- OVERFLOW:", other_overflows.length, "\n--> Warning: ", other_overflows_warning.length, "\n--> Danger: ", other_overflows_danger.length, "\n--> Error: ", other_overflows_error.length)
+    console.log("\n- INTERMITENCE:", other_intermitence.length, "\n--> Warning: ", other_intermitence_warning.length, "\n--> Danger: ", other_intermitence_danger.length, "\n--> Error: ", other_intermitence_error.length)
 
 })
 
