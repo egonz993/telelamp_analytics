@@ -1,5 +1,6 @@
 import fetch from 'node-fetch';
 import auth from '../auth.js';
+import readline from 'readline'
 
 var devicesList = []
 
@@ -72,8 +73,8 @@ async function getPayloads(deveui) {
 
 export async function getAnalysis(callback) {
     let activeDevices = await getActiveDevices()
-    console.log(`\nRendering data for ${activeDevices.length} devices`)
-    console.log(`This may take a few minutes, please wait`)
+    console.log(`\nProcessing data for ${activeDevices.length} devices`)
+    console.log(`This may take a few minutes, please wait\n`)
     activeDevices.map(async (device) => {
 
         let deveui = device.deveui ? device.deveui : null
@@ -146,7 +147,19 @@ export async function getAnalysis(callback) {
         if(devicesList.length == activeDevices.length){
             callback(devicesList)
         }
+        else{
+            let progress = Math.trunc(100 * devicesList.length / activeDevices.length)
+            printProgress(progress)
+        }
         return result
     })
 
+}
+
+
+function printProgress(progress) {
+    readline.clearLine(process.stdout, 0);
+    readline.cursorTo(process.stdout, 0, null);
+    let text = `Running Data Analyzer... ${progress}%`;
+    process.stdout.write(text);
 }
