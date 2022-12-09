@@ -15,7 +15,7 @@ const todaySeconds = Math.ceil(time / 1000)
 const todayUplinks = Math.ceil(todaySeconds / 600)
 
 
-export async function getActiveDevices(limit = 2000) {
+async function getActiveDevices(limit = 2000) {
     console.log("fetching data... ")
 
     let url = `https://nst.au.saas.orbiwise.com:8443/rest/nodes?from_date=${year}-${month}-${day}T00:00:00&limit=${limit}`
@@ -71,7 +71,7 @@ async function getPayloads(deveui) {
     }
 }
 
-export async function getAnalysis(callback) {
+export async function DataAnalyzer(callback) {
     let activeDevices = await getActiveDevices()
     console.log(`\nProcessing data for ${activeDevices.length} devices`)
     console.log(`This may take a few minutes, please wait\n`)
@@ -144,13 +144,13 @@ export async function getAnalysis(callback) {
         }
 
         devicesList.push(result)
+
+        let progress = Math.floor(100 * devicesList.length / activeDevices.length)
+        printProgress(progress)
         if(devicesList.length == activeDevices.length){
             callback(devicesList)
         }
-        else{
-            let progress = Math.trunc(100 * devicesList.length / activeDevices.length)
-            printProgress(progress)
-        }
+
         return result
     })
 

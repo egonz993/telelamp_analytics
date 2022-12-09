@@ -1,17 +1,10 @@
-import { getDataFrom } from './functions.js';
-import { sendDownlinkGroup } from './downlink.js';
-import { getAnalysis } from './cmd/analyze.js'
+import { DataAnalyzer } from './cmd/analyze.js'
 
-
-
-
-
-getAnalysis(devices => {
+DataAnalyzer(devices => {
     // console.table(devices)
 
     let rak3172_devices = devices.filter(device => device.deveui.includes("ac1f09fffe"))
     let other_devices = devices.filter(device => !device.deveui.includes("ac1f09fffe"))
-    
     
     let working = devices.filter(device => device.description == 'OK')
 
@@ -74,6 +67,7 @@ getAnalysis(devices => {
 
 
     /* CONSOLE LOGS */
+    console.log("\n\n")
 
     console.log("\nALL DEVICES WORKING OK:", working.length)
     console.table(working)
@@ -128,8 +122,6 @@ getAnalysis(devices => {
     //OTHER undefined
     console.log("\n- OTHER DEVICES UNDEFINED:", other_undefined.length)
     console.table(other_undefined)
-
-
 
     /* RESUME */
     
