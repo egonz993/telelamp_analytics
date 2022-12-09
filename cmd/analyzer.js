@@ -296,25 +296,25 @@ export const analyzer = async () => {
                 console.log("\n\n\nTOTAL DEVICES: ", devices.length)
                 console.table(devices)
 
-                console.log("\n- TOTAL WORKING OK:", working.length)
-                console.table(working)
+                // console.log("\n- TOTAL WORKING OK:", working.length)
+                // console.table(working)
 
-                console.log("\n- TOTAL UNDEFINED:", undefined.length)
-                console.table(undefined)
+                // console.log("\n- TOTAL UNDEFINED:", undefined.length)
+                // console.table(undefined)
 
-                console.log("\n- TOTAL UNDERFLOW:", underflows.length, "\n--> Warning: ", underflows_warning.length, "\n--> Danger: ", underflows_danger.length, "\n--> Error: ", underflows_error.length)
-                console.table(underflows)
+                // console.log("\n- TOTAL UNDERFLOW:", underflows.length, "\n--> Warning: ", underflows_warning.length, "\n--> Danger: ", underflows_danger.length, "\n--> Error: ", underflows_error.length)
+                // console.table(underflows)
 
-                console.log("\n- TOTAL OVERFLOW:", overflows.length, "\n--> Warning: ", overflows_warning.length, "\n--> Danger: ", overflows_danger.length, "\n--> Error: ", overflows_error.length)
-                console.table(overflows)
+                // console.log("\n- TOTAL OVERFLOW:", overflows.length, "\n--> Warning: ", overflows_warning.length, "\n--> Danger: ", overflows_danger.length, "\n--> Error: ", overflows_error.length)
+                // console.table(overflows)
 
-                console.log("\n- TOTAL INTERMITENCE:", intermitence.length, "\n--> Warning: ", intermitence_warning.length, "\n--> Danger: ", intermitence_danger.length, "\n--> Error: ", intermitence_error.length)
-                console.table(intermitence)
+                // console.log("\n- TOTAL INTERMITENCE:", intermitence.length, "\n--> Warning: ", intermitence_warning.length, "\n--> Danger: ", intermitence_danger.length, "\n--> Error: ", intermitence_error.length)
+                // console.table(intermitence)
 
             
                 //RAK3172 DEVICES
-                console.log("\n\n\nRAK3172 DEVICES: ", rak3172_devices.length)
-                console.table(rak3172_devices)
+                // console.log("\n\n\nRAK3172 DEVICES: ", rak3172_devices.length)
+                // console.table(rak3172_devices)
 
                 console.log("\n- RAK3172 WORKING OK:", rak3172_working.length)
                 console.table(rak3172_working)
@@ -333,8 +333,8 @@ export const analyzer = async () => {
 
                 
                 //RAK4260 DEVICES
-                console.log("\n\n\nRAK4260 DEVICES: ", rak4260_devices.length)
-                console.table(rak4260_devices)
+                // console.log("\n\n\nRAK4260 DEVICES: ", rak4260_devices.length)
+                // console.table(rak4260_devices)
 
                 console.log("\n- RAK4260 WORKING OK:", rak4260_working.length)
                 console.table(rak4260_working)
@@ -353,8 +353,8 @@ export const analyzer = async () => {
 
                 
                 //ELEMON DEVICES
-                console.log("\n\n\nELEMON DEVICES: ", elemon_devices.length)
-                console.table(elemon_devices)
+                // console.log("\n\n\nELEMON DEVICES: ", elemon_devices.length)
+                // console.table(elemon_devices)
 
                 console.log("\n- ELEMON WORKING OK:", elemon_working.length)
                 console.table(elemon_working)
