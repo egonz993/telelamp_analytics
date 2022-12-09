@@ -6,7 +6,7 @@ import { getAnalysis } from './cmd/analyze.js'
 
 
 
-getAnalysis((devices) => {         //getAnalysis(t, limit, callcack)
+getAnalysis(devices => {         //getAnalysis(t, limit, callcack)
     // console.table(devices)
 
     let rak3172_devices = devices.filter(device => device.deveui.includes("ac1f09fffe"))
