@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
 import auth from './auth.js';
 import readline from 'readline'
+import { deveuiList } from './devices.js'
 import { writeToFile, readFromFile } from './file.js'
 
 const prompt = readline.createInterface({
@@ -37,7 +38,7 @@ function ago(days){
 async function getActiveDevices() {
     console.log("\nfetching data... ")
 
-    let url = `https://nst.au.saas.orbiwise.com:8443/rest/nodes?from_date=${from_date}`
+    let url = `https://nst.au.saas.orbiwise.com:8443/rest/nodes?from_date=${from_date}&group=keepalive`
     let params = {
         method: 'GET',
         headers: {
@@ -93,6 +94,7 @@ async function DataAnalyzer(callback) {
     console.log(`Expected ${expected_ul} uplinks per devices from ${from_date}`)
     console.log(`This may take a few time, please wait\n`)
     
+    activeDevices = activeDevices.filter(device => device.comment.includes('Test'))
     
     activeDevices.map(async (device) => {
         let deveui = device.deveui ? device.deveui : null
@@ -391,9 +393,9 @@ function JSON_analizer(devices){
             console.log("\n\n\n ***** TABLES *****\n\n")
 
             //ALL DEVICES
-            // console.log("\nTOTAL DEVICES: ", devices.length)
-            // console.table(devices)
-
+            console.log("\nTOTAL DEVICES: ", devices.length)
+            console.table(devices)
+/*
             console.log("\n- TOTAL WORKING OK:", working.length)
             console.table(working)
 
@@ -501,7 +503,7 @@ function JSON_analizer(devices){
             console.log("\n- ELEMON OVERFLOW:", elemon_overflows.length, "\n--> Warning: ", elemon_overflows_warning.length, "\n--> Danger: ", elemon_overflows_danger.length, "\n--> Error: ", elemon_overflows_error.length)
             console.log("\n- ELEMON INTERMITENCE:", elemon_intermitence.length, "\n--> Warning: ", elemon_intermitence_warning.length, "\n--> Danger: ", elemon_intermitence_danger.length, "\n--> Error: ", elemon_intermitence_error.length)
             console.log("\n- ELEMON UNDEFINED:", elemon_undefined.length)
-
+*/
         }
         process.exit(0)
     });

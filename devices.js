@@ -1,12 +1,12 @@
+//Pruebas Emmanuel
 export const deveuiList = [
-    'ac1f09fffe0553b3',  // 1274    
-    'ac1f09fffe055404',  // 1401
-    'ac1f09fffe0562e2',  // 1861
-    'ac1f09fffe0562dc',  // 2005
-    'ac1f09fffe05631c',  // 2249
-    'ac1f09fffe05634b',  // 2253
-    'ac1f09fffe055bd1',  // 2340
-    'ac1f09fffe055bc9',  // 2364
-    
-    // 'ac1f09fffe0562f4',  // 2245
+    'AC1F09FFFE055364',  //1280
+    'AC1F09FFFE056950',  //2076
+    'AC1F09FFFE0553E7',  //1374
+    'AC1F09FFFE054D3A',  //1375
+    'AC1F09FFFE0562F4',  //2245
+    'AC1F09FFFE056571',  //1778
+    'AC1F09FFFE055355',  //1287
+    'AC1F09FFFE0567F9',  //1938
+    'AC1F09FFFE056370',  //2164
 ]
