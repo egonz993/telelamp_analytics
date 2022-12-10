@@ -12,4 +12,4 @@ console.log("*************************************************")
  * 
  * @fileName    name of file to process
  */
-analyzer_file('analytics analytics 20221210_123408.json')
+analyzer_file('analytics 20221210_123408.json')
