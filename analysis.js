@@ -180,7 +180,7 @@ async function DataAnalyzer(callback) {
         
         printProgress(progress)
         if(devicesList.length == activeDevices.length){
-            //writeToFile(JSON.stringify(devicesList))
+            writeToFile(JSON.stringify(devicesList))
             callback(devicesList)
         }
 
