@@ -2,17 +2,19 @@ import fetch from 'node-fetch';
 import readline from 'readline'
 import auth from './auth.js';
 import { gatewayName } from './gateways.js'
-import { deveuiList } from './devices.js'
 import { writeToFile, readFromFile } from './file.js'
+
+const filter = 'Test'
+const group_id = 'keepalive'
+
+let devicesList = []
+let from_date = ''
+let expected_ul = 0
 
 const prompt = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
-
-let devicesList = []
-let from_date = ''
-let expected_ul = 0
 
 function ago(days){
     //Interval Time in seconds
@@ -39,7 +41,7 @@ function ago(days){
 async function getActiveDevices() {
     console.log("\nfetching data... ")
 
-    let url = `https://nst.au.saas.orbiwise.com:8443/rest/nodes?from_date=${from_date}&group=keepalive`
+    let url = `https://nst.au.saas.orbiwise.com:8443/rest/nodes?from_date=${from_date}&group=${group_id}`
     let params = {
         method: 'GET',
         headers: {
@@ -95,7 +97,7 @@ async function DataAnalyzer(callback) {
     console.log(`Expected ${expected_ul} uplinks per devices from ${from_date}`)
     console.log(`This may take a few time, please wait\n`)
     
-    activeDevices = activeDevices.filter(device => device.comment.includes('Test'))
+    activeDevices = activeDevices.filter(device => device.comment.includes(filter))
     
     activeDevices.map(async (device) => {
         let deveui = device.deveui ? device.deveui : null
@@ -116,7 +118,7 @@ async function DataAnalyzer(callback) {
         let description = "UNDEFINED"
 
         let gtw_info =  0
-        let gateways =  0
+        let gtw_name =  0
 
         if (uplinks.length >= 1) {
             packets = uplinks.length
@@ -125,7 +127,7 @@ async function DataAnalyzer(callback) {
             interval = Math.trunc(intervals.reduce((a, b) => a + b, 0) / (intervals.length - 1))
             deviation = Math.trunc(Math.sqrt(intervals.reduce((a, b) => a + Math.pow((b - interval), 2), 0) / (intervals.length - 1)))
             gtw_info = uplinks.map(packet => packet.gtw_info.map(gtw => gtw.gtw_id)).flat().sort().filter((x, idx, arr) => arr[idx + 1] != x)
-            gateways = gtw_info.map(gtw => gatewayName[gtw]).reduce( ( acc, el ) => acc + ' ' + el, '['+gtw_info.length + ']')
+            gtw_name = gtw_info.map(gtw => gatewayName[gtw]).reduce( ( acc, el ) => acc + ' ' + el, '')
             rssi = Math.trunc((uplinks.map(packet => packet.rssi).reduce((a, b) => a + b, 0)) / packets)
             snr = Math.trunc((uplinks.map(packet => packet.snr).reduce((a, b) => a + b, 0)) / packets)
             sf_used = uplinks.map(packet => packet.sf_used).sort().filter((x, idx, arr) => arr[idx + 1] != x)
@@ -158,7 +160,8 @@ async function DataAnalyzer(callback) {
             packets,
             interval,
             deviation,
-            gateways,
+            gtw: gtw_info.length,
+            gtw_name,
             rssi,
             snr,
             sf_used,
