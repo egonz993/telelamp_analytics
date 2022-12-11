@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
-import auth from './auth.js';
 import readline from 'readline'
+import auth from './auth.js';
+import { gatewayName } from './gateways.js'
 import { deveuiList } from './devices.js'
 import { writeToFile, readFromFile } from './file.js'
 
@@ -114,18 +115,23 @@ async function DataAnalyzer(callback) {
         let status = "UNDEFINED"
         let description = "UNDEFINED"
 
+        let gtw_info =  0
+        let gateways =  0
+
         if (uplinks.length >= 1) {
             packets = uplinks.length
             timestamps = uplinks.map(packet => Math.trunc(new Date(packet.timestamp).getTime() / 1000)).sort()
             intervals = timestamps.map((timestamp, idx, arr) => (arr[idx + 1] - timestamp) / 60).filter(x => x)
             interval = Math.trunc(intervals.reduce((a, b) => a + b, 0) / (intervals.length - 1))
             deviation = Math.trunc(Math.sqrt(intervals.reduce((a, b) => a + Math.pow((b - interval), 2), 0) / (intervals.length - 1)))
+            gtw_info = uplinks.map(packet => packet.gtw_info.map(gtw => gtw.gtw_id)).flat().sort().filter((x, idx, arr) => arr[idx + 1] != x)
+            gateways = gtw_info.map(gtw => gatewayName[gtw]).reduce( ( acc, el ) => acc + ' ' + el, '['+gtw_info.length + ']')
             rssi = Math.trunc((uplinks.map(packet => packet.rssi).reduce((a, b) => a + b, 0)) / packets)
             snr = Math.trunc((uplinks.map(packet => packet.snr).reduce((a, b) => a + b, 0)) / packets)
             sf_used = uplinks.map(packet => packet.sf_used).sort().filter((x, idx, arr) => arr[idx + 1] != x)
             time_on_air_ms = Math.trunc((uplinks.map(packet => packet.time_on_air_ms).reduce((a, b) => a + b, 0)) / packets)
             FER = Math.ceil(packets / expected_ul * 100) + "%"
-
+            
             status = "OK"
             if (Math.ceil(packets / expected_ul * 100) > 150) status = "WARNING"
             if (Math.ceil(packets / expected_ul * 100) > 200) status = "DANGER"
@@ -152,6 +158,7 @@ async function DataAnalyzer(callback) {
             packets,
             interval,
             deviation,
+            gateways,
             rssi,
             snr,
             sf_used,
@@ -173,7 +180,7 @@ async function DataAnalyzer(callback) {
         
         printProgress(progress)
         if(devicesList.length == activeDevices.length){
-            writeToFile(JSON.stringify(devicesList))
+            //writeToFile(JSON.stringify(devicesList))
             callback(devicesList)
         }
 
